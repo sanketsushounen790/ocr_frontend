@@ -5,11 +5,11 @@ import { useState } from 'react'
 import useImageStore from '../store/useImageStore'
 
 import Grid from '@mui/material/Grid';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 
 const url = `http://localhost:5000/convert`
 
-const convertBase64StringToJpgImage = async (base64String) => {
+const convertBase64StringToJpgImage = async (base64String, language) => {
     const res = await fetch(
         `${url}`,
         {
@@ -20,7 +20,8 @@ const convertBase64StringToJpgImage = async (base64String) => {
             },
             body: JSON.stringify({
                 data: {
-                    base64String: base64String
+                    base64String: base64String,
+                    language: language
                 }
             })
         }
@@ -38,10 +39,16 @@ const convertBase64StringToJpgImage = async (base64String) => {
 const Convert = () => {
     const base64String = useImageStore((state) => state.imageUrl)
 
-    const imageUrl = useImageStore((state) => state.imageUrl)
-    const newImageCapture = useImageStore((state) => state.newImageCapture)
+    const language = useImageStore((state) => state.language)
+    const setLanguage = useImageStore((state) => state.setLanguage)
 
-    console.log(base64String)
+    const handleChange = (event) => {
+        //console.log(event.target.value)
+        setLanguage(event.target.value);
+    }
+
+    //console.log(base64String)
+    console.log(language)
 
     const {
         data,
@@ -51,7 +58,7 @@ const Convert = () => {
         mutate: convertBase64
     } = useMutation({
         mutationKey: ["convertBase64"],
-        mutationFn: async (base64String) => await convertBase64StringToJpgImage(base64String),
+        mutationFn: async (base64String, langauge) => await convertBase64StringToJpgImage(base64String, language),
         onError: ((err) => {
             console.log("Error when convert")
             console.log(err)
@@ -83,18 +90,41 @@ const Convert = () => {
                 mt={3}
                 container
                 alignItems="center"
-                justifyContent="center"
+                justifyContent="space-evenly"
                 sx={{
-                    width: "50%",
+                    width: "40%",
                     //backgroundColor: "gray",
                     border: 0
                 }}
             >
+
                 {
                     base64String.length === 0
                         ? <Button disabled variant="contained">Chuyển Đổi</Button>
-                        : <Button onClick={() => convertBase64(base64String.slice(23))} variant="contained">Chuyển Đổi</Button>
+                        : <Button onClick={() => convertBase64(base64String.slice(23), language)} variant="contained">Chuyển Đổi</Button>
                 }
+
+                <FormControl
+                    sx={{
+                        width: "200px",
+                        //marginRight: "70px"
+                    }}
+
+                >
+                    <InputLabel id="demo-simple-select-label" mb={1}>Language</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={language || "en"}
+                        label="Language"
+                        onChange={(event) => handleChange(event)}
+                    >
+                        <MenuItem value="en">English</MenuItem>
+                        <MenuItem value="vie">Vietnamese</MenuItem>
+                    </Select>
+                </FormControl>
+
+
             </Grid>
 
 
