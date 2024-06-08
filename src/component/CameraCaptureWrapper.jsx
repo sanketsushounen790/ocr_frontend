@@ -10,12 +10,16 @@ import Convert from './Convert';
 const CameraCaptureWrapper = () => {
     return (
         <Grid
+            pb={3}
             container
-           
             direction="row"
             alignItems="start"
             justifyContent="center"
-            sx={{ height: '100vh', width: "100%", backgroundColor: "yellow", border: 0 }}
+            sx={{ 
+                height: '110vh', 
+                width: "100%", 
+                //backgroundColor: "yellow", 
+                border: 0 }}
         >
             <Grid item xs={12} md={6}>
                 <Camera />

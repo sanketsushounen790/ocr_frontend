@@ -5,7 +5,7 @@ import { useState } from 'react'
 import useImageStore from '../store/useImageStore'
 
 import Grid from '@mui/material/Grid';
-import { Button } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 
 const url = `http://localhost:5000/convert`
 
@@ -38,14 +38,16 @@ const convertBase64StringToJpgImage = async (base64String) => {
 const Convert = () => {
     const base64String = useImageStore((state) => state.imageUrl)
 
+    const imageUrl = useImageStore((state) => state.imageUrl)
+    const newImageCapture = useImageStore((state) => state.newImageCapture)
+
     console.log(base64String)
 
     const {
         data,
         error,
         isError,
-        isIdle,
-        isLoading,
+        isPending,
         mutate: convertBase64
     } = useMutation({
         mutationKey: ["convertBase64"],
@@ -60,6 +62,7 @@ const Convert = () => {
         },
     })
 
+    console.log(isPending)
 
     return (
         <Grid
@@ -67,38 +70,76 @@ const Convert = () => {
             direction="row"
             alignItems="start"
             justifyContent="center"
-            sx={{ height: '100vh', width: "100%", backgroundColor: "purple", border: 0 }}
+            sx={{
+                height: '100vh',
+                width: "100%",
+                //backgroundColor: "purple",
+                border: 0
+            }}
         >
 
-            <Grid item xs={12}
-                sx={{ width: "100%", backgroundColor: "orange", border: 0 }}
+            <Grid
+                xs={12}
+                mt={3}
+                container
+                alignItems="center"
+                justifyContent="center"
+                sx={{
+                    width: "50%",
+                    //backgroundColor: "gray",
+                    border: 0
+                }}
             >
                 {
                     base64String.length === 0
-                        ? <Button disabled>Disabled</Button>
-                        : <Button onClick={() => convertBase64(base64String.slice(23))} variant="contained">Chuyen Doi</Button>
+                        ? <Button disabled variant="contained">Chuyển Đổi</Button>
+                        : <Button onClick={() => convertBase64(base64String.slice(23))} variant="contained">Chuyển Đổi</Button>
                 }
             </Grid>
 
 
 
-            <Grid item xs={12} >
-                <div style={{ width: "100%", height: "auto" }}>
+            <Grid
+                xs={11}
+                mt={3}
+                container
+                alignItems="start"
+                justifyContent="center"
+                sx={{
+                    height: "100%",
+                    //backgroundColor: "pink",
+                    border: "solid 2px black"
+                }}
+            >
 
-                    {
-                        isError ?
-                            <div></div>
-                            : isLoading ? <div>Loading...</div>
-                                : <div>
-                                    {
-                                        data ?
-                                            <div>{data?.text}</div>
-                                            : <div>Ko co data tu server</div>
-                                    }
-                                </div>
-                    }
+                {
 
-                </div>
+                    isError ?
+                        <Typography mt={2} variant="h5">
+                            Lỗi Xin Hãy Refresh Lại Page !
+                        </Typography>
+                        : isPending
+                            ? <Typography mt={2} variant="h5">
+                                Đang Tải... ! Đợi Xíu !
+                            </Typography>
+                            : <>
+                                {
+                                    data ?
+                                        data?.text.length === 0
+                                            ? <Typography mt={2} variant="h5" style={{ width: '100%', maxWidth: "80%", textAlign: "center" }}>
+                                                Không thể chuyển đổi từ hình ảnh văn bản sang text ! Hãy sử dụng đúng hình ảnh văn bản rõ chữ
+                                            </Typography>
+                                            : <Box mt={2} sx={{ width: '100%', maxWidth: "90%", textAlign: "justify" }}>{data?.text}</Box>
+                                        :
+                                        <Typography mt={2} variant="h5">
+                                            Hãy Chụp Hình Và Bấm Chuyển Đổi !
+                                        </Typography>
+                                }
+                            </>
+
+                }
+
+
             </Grid>
 
         </Grid>

@@ -35,31 +35,35 @@ const Camera = () => {
             direction="column"
             alignItems="center"
             justifyContent="center"
-            style={{ backgroundColor: "green" }}
+            sx={{ 
+                //backgroundColor: "green" 
+            }}
         >
-            <Grid item xs={12}
-            md={6}
-                style={{ width: "100%" }}
-            >
-                <Grid
-                    container
-                    direction="row"
-                    alignItems="center"
-                    justifyContent="center"
-                    style={{ width: "100%", backgroundColor: "brown" }}
-                >
-                    <Grid item md={6}>
-                        <Button variant="contained" onClick={capturePhoto} >Chup Hinh</Button>
-                    </Grid>
 
-                    <Grid item md={6}>
-                        <Button variant="contained" onClick={() => clear()} >Refresh</Button>
-                    </Grid>
+            <Grid
+                mt={3}
+                container
+                direction="row"
+                alignItems="center"
+                justifyContent="space-evenly"
+                sx={{ 
+                    width: "50%", 
+                //backgroundColor: "brown" 
+            }}
+
+            >
+                <Grid item >
+                    <Button variant="contained" onClick={capturePhoto} >Chụp Hình</Button>
                 </Grid>
 
+                <Grid item >
+                    <Button variant="contained" onClick={() => clear()} >Refresh</Button>
+                </Grid>
             </Grid>
 
-            <Grid item xs={12} mt={4}>
+
+
+            <Grid item xs={12} mt={3}>
                 <Webcam
                     ref={webcamRef}
                     audio={true}
@@ -69,28 +73,31 @@ const Camera = () => {
                 />
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={12} mt={1}>
                 <Grid
                     container
                     direction="column"
                     alignItems="center"
                     justifyContent="center"
-                    style={{ width: "500px", backgroundColor: "brown" }}
+                    style={{ 
+                        width: "100%",
+                        //backgroundColor: "brown" 
+                        }}
                 >
-                    <Grid item xs={12}>
-                        <Typography>Hinh anh thu duoc</Typography>
-                    </Grid>
+
+                    <Typography variant="h4" >Hình Ảnh Thu Được</Typography>
+
 
                 </Grid>
 
 
-                <div >
+                <Grid item xs={12} mb={3}>
                     {imageUrl && (
                         <div>
                             <img src={imageUrl} alt="Screenshot" />
                         </div>
                     )}
-                </div>
+                </Grid>
             </Grid>
 
         </Grid>
